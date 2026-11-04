@@ -1,0 +1,198 @@
+File Uploader — Project Progress
+Foundation completed
+Development in progress
+
+1. Project Overview
+โปรเจกต์นี้เป็นส่วนหนึ่งของ The Odin Project โดยเราจะสร้างเว็บแอปพลิเคชันที่มีแนวคิดคล้าย Google Drive แบบย่อส่วน
+
+ผู้ใช้จะสามารถ:
+- สมัครสมาชิกและเข้าสู่ระบบ
+- สร้างและจัดการ Folders
+- Upload และจัดเก็บ Files
+- ดูรายละเอียดและ Download Files
+- จัดการ Files ภายใน Folders
+- แชร์ Folder กับผู้ใช้อื่น (Extra Credit)
+
+2. Technologies ที่เราเลือกใช้
+Technology	หน้าที่
+Node.js	JavaScript Runtime
+Express.js	Backend Framework
+PostgreSQL	Relational Database
+Prisma ORM	ติดต่อและจัดการ Database
+EJS	Server-side Rendering
+Passport.js	Authentication
+bcrypt	Password Hashing
+Multer	File Upload Handling
+express-session	จัดการ Session
+express-validator	ตรวจสอบข้อมูลจาก Form
+dotenv	จัดการ Environment Variables
+
+3. สิ่งที่เราทำเสร็จแล้ว
+3.1 Project Setup
+สร้างโปรเจกต์ที่:
+/home/lanma/Coding/javascript/File_Uploader
+
+
+ติดตั้ง Dependencies ที่จำเป็นแล้ว เช่น:
+npm install express express-session pg passport passport-local ejs express-validator dotenv bcrypt
+
+
+และติดตั้ง Prisma:
+npm install prisma @prisma/client @prisma/adapter-pg
+npm install -D nodemon
+
+
+3.2 PostgreSQL Database
+สร้าง Database ชื่อ:
+file_uploader
+
+
+และตั้งค่า DATABASE_URL ใน .env เพื่อให้ Prisma ติดต่อ PostgreSQL ได้
+
+Completed
+ ทดสอบการเชื่อมต่อสำเร็จแล้ว
+3.3 Prisma Schema
+เราออกแบบ Database ด้วย Prisma Schema ซึ่งมี 3 Models
+
+User
+
+เก็บข้อมูลผู้ใช้:
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  folders Folder[]
+  files   File[]
+}
+
+
+Folder
+
+เก็บข้อมูล Folder และความสัมพันธ์กับ User:
+model Folder {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files  File[]
+}
+
+
+File
+
+เก็บข้อมูลไฟล์และความสัมพันธ์กับ User และ Folder:
+model File {
+  id           Int      @id @default(autoincrement())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  createdAt    DateTime @default(now())
+
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  folderId Int?
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+}
+
+
+ความสัมพันธ์ของ Database
+User
+
+หนึ่ง User มีหลาย Folders และ Files
+
+1 : Many
+
+Folder
+
+หนึ่ง Folder มีหลาย Files
+
+
+File
+
+File เป็นของ User หนึ่งคน
+
+
+
+File สามารถอยู่ใน Folder หรือไม่อยู่ใน Folder ก็ได้
+
+เรายังได้กำหนด Referential Actions:
+- onDelete: Cascade — เมื่อลบ User จะลบ Folder และ File ของ User คนนั้นด้วย
+- onDelete: SetNull — เมื่อลบ Folder ไฟล์ที่อยู่ใน Folder จะไม่ถูกลบ แต่จะกลายเป็นไฟล์ที่ไม่มี Folder
+3.4 Prisma Migration และ Client
+เรารันคำสั่ง:
+npx prisma migrate dev --name init
+npx prisma generate
+
+
+และสร้างไฟล์ db/prisma.js เพื่อเชื่อมต่อ Prisma กับ PostgreSQL ผ่าน PrismaPg Adapter
+
+ปัจจุบันทดสอบด้วย test-db.js ได้ผลลัพธ์:
+Successfully connected to PostgreSQL!
+Users: []
+
+
+หมายความว่าระบบ Database Connection ทำงานได้แล้ว
+4. Project Folder Structure ปัจจุบัน
+File_Uploader/
+│
+├── config/
+├── controllers/
+├── db/
+│   └── prisma.js
+├── middleware/
+├── prisma/
+│   └── schema.prisma
+├── public/
+│   ├── css/
+│   └── js/
+├── routes/
+├── views/
+│
+├── .env
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── prisma7.config.ts
+├── test-db.js
+├── README.md
+└── generated/
+
+
+หมายเหตุ: โฟลเดอร์ public/css และ public/js เป็นขั้นตอนล่าสุดที่เราเพิ่งเริ่มสร้าง หากสร้างสำเร็จแล้วจะได้โครงสร้างตามภาพนี้
+
+5. สิ่งที่ยังไม่ได้ทำ
+นี่คือส่วนหลักของ Application ที่เราจะพัฒนาต่อไป
+Feature	สถานะ
+Project Setup	Done
+PostgreSQL Setup	Done
+Prisma Schema	Done
+Database Migration	Done
+Prisma Connection Test	Done
+Express Server	Not started
+EJS Views	Not started
+User Registration	Not started
+Login / Logout	Not started
+Passport Authentication	Not started
+Folder CRUD	Not started
+File Upload (Multer)	Not started
+File Details / Download	Not started
+File Storage	Not started
+Folder Sharing	Not started
+
+6. Development Roadmap ที่เราจะเดินต่อ
+ผมแนะนำให้แบ่งการพัฒนาออกเป็นลำดับดังนี้:
+1. Express Foundation — สร้าง Express Server, ตั้งค่า EJS และ Static Files
+2. Authentication — สมัครสมาชิก, Login, Logout, Passport และ Session
+3. Folder Management — สร้าง อ่าน แก้ไข และลบ Folder
+4. File Upload — ใช้ Multer จัดการการ Upload
+5. File Management — แสดงรายละเอียด Download และ Delete Files
+6. Cloud Storage — พิจารณาการจัดเก็บไฟล์บน Cloud
+7. Security & Validation — ตรวจสอบสิทธิ์และข้อมูลต่าง ๆ
+8. Extra Credit — Folder Sharing
