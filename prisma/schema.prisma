@@ -48,3 +48,12 @@ model File {
   folder   Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
 }
 
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+
