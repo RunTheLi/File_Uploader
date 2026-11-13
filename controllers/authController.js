@@ -86,8 +86,3 @@ module.exports = {
   getLogin,
   logoutUser,
 };
-
-module.exports = {
-  getSignUp,
-  postSignUp,
-};

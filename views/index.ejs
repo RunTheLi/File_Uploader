@@ -3,6 +3,47 @@
 <%- include("partials/header", { title: "Home" }) %>
 
 <h1>Welcome to File Uploader!</h1>
-<p>Your personal file storage application.</p>
+
+<% if (currentUser) { %>
+  <div style="margin-bottom: 20px;">
+    <p>Hello, <strong><%= currentUser.username %></strong>!</p>
+    <a href="/auth/log-out">Log Out</a>
+  </div>
+
+  <hr>
+
+  <!-- ฟอร์มสร้าง Folder ใหม่ -->
+  <section>
+    <h3>Create a New Folder</h3>
+    <form action="/folders/create" method="POST">
+      <input type="text" name="name" placeholder="Folder Name" required>
+      <button type="submit">Create Folder</button>
+    </form>
+  </section>
+
+  <hr>
+
+  <!-- แสดงรายชื่อ Folder ของผู้ใช้ -->
+  <section>
+    <h3>Your Folders</h3>
+    <% if (folders && folders.length > 0) { %>
+      <ul>
+        <% folders.forEach(folder => { %>
+          <li>
+            <a href="/folders/<%= folder.id %>">📁 <%= folder.name %></a>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No folders found. Create your first folder above!</p>
+    <% } %>
+  </section>
+
+<% } else { %>
+  <p>Your personal file storage application.</p>
+  <div>
+    <a href="/auth/log-in">Log In</a> | <a href="/auth/sign-up">Sign Up</a>
+  </div>
+<% } %>
 
 <%- include("partials/footer") %>
