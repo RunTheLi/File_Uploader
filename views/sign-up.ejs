@@ -1,0 +1,52 @@
+
+<%- include("partials/header", { title: "Sign Up" }) %>
+
+<h1>Create an Account</h1>
+
+<% if (errors && errors.length > 0) { %>
+  <ul>
+    <% errors.forEach((error) => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<form action="/auth/sign-up" method="POST">
+  <div>
+    <label for="username">Username</label>
+    <input
+      type="text"
+      id="username"
+      name="username"
+      required
+    >
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <input
+      type="password"
+      id="password"
+      name="password"
+      required
+    >
+  </div>
+
+  <div>
+    <label for="confirmPassword">Confirm password</label>
+    <input
+      type="password"
+      id="confirmPassword"
+      name="confirmPassword"
+      required
+    >
+  </div>
+
+  <br>
+  <button type="submit">Sign Up</button>
+</form>
+
+<p>Already have an account? <a href="/auth/log-in">Log in</a></p>
+<p><a href="/">Back to home</a></p>
+
+<%- include("partials/footer") %>

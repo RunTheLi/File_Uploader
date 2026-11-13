@@ -1,0 +1,28 @@
+<!--views/log-in.ejs-->
+<%- include("partials/header", { title: "Log In" }) %>
+
+<h1>Log In</h1>
+
+<% if (errorMessage) { %>
+  <p style="color: red;"><%= errorMessage %></p>
+<% } %>
+
+<form action="/auth/log-in" method="POST">
+  <div>
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required>
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+  </div>
+
+  <br>
+  <button type="submit">Log In</button>
+</form>
+
+<p>Don't have an account? <a href="/auth/sign-up">Sign up</a></p>
+<p><a href="/">Back to home</a></p>
+
+<%- include("partials/footer") %>
