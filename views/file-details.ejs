@@ -1,1 +1,26 @@
 <!--file-details.ejs-->
+
+<%- include("partials/header", { title: file.originalName }) %>
+
+<h1>📄 File Details</h1>
+
+<div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+  <p><strong>File Name:</strong> <%= file.originalName %></p>
+  <p><strong>File Type:</strong> <%= file.mimeType %></p>
+  <p><strong>Size:</strong> <%= (file.size / 1024).toFixed(2) %> KB</p>
+  <p><strong>Uploaded At:</strong> <%= new Date(file.createdAt).toLocaleString() %></p>
+</div>
+
+<a href="/files/<%= file.id %>/download">
+  <button style="padding: 10px 15px; background: #007bff; color: white; border: none; cursor: pointer;">Download File</button>
+
+  <!-- ต่อจากปุ่ม Download เดิม -->
+<form action="/files/<%= file.id %>/delete" method="POST" style="display:inline; margin-left: 10px;" onsubmit="return confirm('Are you sure you want to delete this file?');">
+  <button type="submit" style="padding: 10px 15px; background: #dc3545; color: white; border: none; cursor: pointer;">Delete File</button>
+</form>
+</a>
+
+<br><br>
+<a href="javascript:history.back()">⬅️ Back</a>
+
+<%- include("partials/footer") %>

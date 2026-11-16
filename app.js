@@ -3,7 +3,9 @@ const express = require("express");
 const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("passport");
+const shareRouter = require("./routes/shareRouter");
 prisma = require("./db/prisma"); // หากประกาศ prisma ไว้แล้ว หรือเรียกผ่านตัวแปรเดิม
+
 
 // โหลด Passport Config
 require("./config/passport");
@@ -20,6 +22,7 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/share", shareRouter);
 
 // ตั้งค่า Session ร่วมกับ Prisma Session Store
 app.use(

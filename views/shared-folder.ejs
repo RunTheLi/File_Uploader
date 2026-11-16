@@ -1,0 +1,27 @@
+<!--views/shared-folder.ejs-->
+<%- include("partials/header", { title: folder.name }) %>
+
+<div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <h1>📁 Shared Folder: <%= folder.name %></h1>
+  <p style="color: #64748b;">Shared by user: <strong><%= folder.user.username %></strong></p>
+  <p style="font-size: 0.85rem; color: #dc2626;">Expires at: <%= new Date(folder.shareExpiresAt).toLocaleString() %></p>
+
+  <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+
+  <h3>Files in this folder</h3>
+  <% if (files && files.length > 0) { %>
+    <ul>
+      <% files.forEach(file => { %>
+        <li>
+          <span>📄 <%= file.originalName %> (<%= (file.size / 1024).toFixed(2) %> KB)</span>
+          <!-- ใช้ url ของไฟล์เพื่อดาวน์โหลดได้ทันที -->
+          <a href="<%= file.url %>" download="<%= file.originalName %>" class="btn" style="padding: 4px 10px; font-size: 0.85rem;">Download</a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No files in this shared folder.</p>
+  <% } %>
+</div>
+
+<%- include("partials/footer") %>

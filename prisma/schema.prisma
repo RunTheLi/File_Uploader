@@ -23,13 +23,15 @@ model User {
 }
 
 model Folder {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
+  id             Int       @id @default(autoincrement())
+  name           String
+  createdAt      DateTime  @default(now())
+  shareToken     String?   @unique
+  shareExpiresAt DateTime?
 
   userId Int
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  files File[]
+  files  File[]
 }
 
 model File {

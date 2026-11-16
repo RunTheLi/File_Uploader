@@ -19,4 +19,9 @@ folderRouter.post("/create", isAuthenticated, folderController.createFolder);
 // Route ดูหน้าตาและไฟล์ภายใน Folder เฉพาะ
 folderRouter.get("/:id", isAuthenticated, folderController.getFolderDetails);
 
+// Route ลบ Folder
+folderRouter.post("/:id/delete", isAuthenticated, folderController.deleteFolder);
+
+folderRouter.post("/:id/share", isAuthenticated, folderController.shareFolder);
+
 module.exports = folderRouter;
