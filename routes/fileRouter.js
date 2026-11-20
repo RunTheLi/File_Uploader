@@ -1,12 +1,12 @@
 //routes/fileRouter.js
 
 const { Router } = require("express");
+const multer = require("multer");
 const fileController = require("../controllers/fileController");
 const upload = require("../middleware/uploadMiddleware");
 
 const fileRouter = Router();
 
-// Middleware เช็คการล็อกอิน
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -14,16 +14,27 @@ const isAuthenticated = (req, res, next) => {
   res.redirect("/auth/log-in");
 };
 
-// Route รับไฟล์อัปโหลด (ชื่อฟิลด์ในฟอร์มคือ "file")
-fileRouter.post("/upload", isAuthenticated, upload.single("file"), fileController.uploadFile);
+const handleFileUpload = (req, res, next) => {
+  upload.single("file")(req, res, (err) => {
+    if (!err) {
+      return next();
+    }
 
-// Route ดูรายละเอียดไฟล์
+    if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).send("File too large. Maximum allowed size is 10 MB.");
+    }
+
+    if (err.code === "INVALID_FILE_TYPE") {
+      return res.status(400).send(err.message);
+    }
+
+    return next(err);
+  });
+};
+
+fileRouter.post("/upload", isAuthenticated, handleFileUpload, fileController.uploadFile);
 fileRouter.get("/:id", isAuthenticated, fileController.getFileDetails);
-
-// Route ดาวน์โหลดไฟล์
 fileRouter.get("/:id/download", isAuthenticated, fileController.downloadFile);
-
-// Route ลบไฟล์ (ใช้ POST เพื่อความปลอดภัย หรือ DELETE ตามชอบ)
 fileRouter.post("/:id/delete", isAuthenticated, fileController.deleteFile);
 
 module.exports = fileRouter;
