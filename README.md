@@ -53,3 +53,12 @@ A personal file storage web application inspired by Google Drive, built with Nod
 - `express-validator` — Form validation.
 - `dotenv` — Loads environment variables from `.env`.
 - `bcrypt` — Password hashing.
+Configure .env with DATABASE_URL and SESSION_SECRET.
+
+Run Prisma migrations and generate the client:
+
+npx prisma migrate dev
+npx prisma generate
+Start the development server:
+
+npm run dev or node app.js
